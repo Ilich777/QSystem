@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qsystem
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qsystem
+  template:
+    metadata:
+      labels:
+        app: qsystem
+    spec:
+      containers:
+      - name: qsystem
+        image: <IMAGE>
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 500m
+            memory: 500Mi
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
+      imagePullSecrets:
+      - name: dcrall
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: qsystem
+  name: qsystem
+spec:
+  ports:
+  - port: 3000
+  selector:
+    app: qsystem

@@ -1,0 +1,49 @@
+module.exports = {
+	"parser": "@typescript-eslint/parser",
+  	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"overrides": [
+	],
+	"parserOptions": {
+		"ecmaVersion": "latest",
+		"sourceType": "module"
+	},
+	"rules": {
+		"no-console": ["warn"],
+		"indent": [
+			"error",
+			"tab"
+		],
+		"linebreak-style": [
+			"error",
+			"windows"
+		],
+		"quotes": [
+			"error",
+			"double"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"semi-style": [
+			"error", 
+			"last"
+		],
+		"semi-spacing": [
+			"error", {
+				"before": false,
+				"after": true
+			}
+		],
+		"no-unused-vars": ["warn"],
+		"@typescript-eslint/no-var-requires": "off",
+		"prefer-const": ["warn"]
+	}
+};
