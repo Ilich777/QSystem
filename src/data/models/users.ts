@@ -11,7 +11,10 @@ import {
 } from "class-validator";
 import Services from "./services";
 
-
+enum roles {
+	ADMIN = "admin",
+	USER = "user"
+}
 @Entity()
 class Users extends BaseEntity {
 	@PrimaryGeneratedColumn()
@@ -19,9 +22,12 @@ class Users extends BaseEntity {
 	@Column()
 	@Length(8, 50)
 		user_name: string;
-	@Column()
-	@Length(2, 15)
-		role: string;
+	@Column({
+		type: "enum",
+		enum: roles,
+		default: roles.USER,
+	})
+		role: roles;
 	@OneToOne(() => Services)
 	@JoinColumn({name: "service_id", referencedColumnName: "service_id", foreignKeyConstraintName: "userService_id"})
 		service: Services;

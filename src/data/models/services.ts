@@ -27,6 +27,5 @@ class Services extends BaseEntity {
 	@Column()
 	@IsInt()
 		window: number;
-	
 }
 export = Services;

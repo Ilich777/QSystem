@@ -13,6 +13,7 @@ class TypeRequest extends BaseEntity {
 		typeRequest_id: number;
 	@Column()
 	@Length(5, 50)
-		master_name: string;
+		typeRequest_name: string;
+	
 }
 export = TypeRequest;

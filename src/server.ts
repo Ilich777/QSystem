@@ -29,29 +29,32 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 import { dbCreateConnection } from "./data/dbCreateConnection";
 
 //инициализация моделей
-dbCreateConnection(postgres);
+dbCreateConnection(postgres)
+	.then(() => {
+		//middlewares
+		server.use(bodyParser.json())
+			.use(bodyParser.urlencoded({ extended: true }))
+			.use(morgan("dev"));
+		
+		//подключение моделей
+		/*Master.initialize(sequelize);
+		Slave.initialize(sequelize);
+		
+		sequelize.sync({ alter: true });*/
+		
+		/*require("./data/models/master")(sequelize);
+		require("./data/models/slave")(sequelize);*/
+		//подключение методов
+		const masterRepository = require("./data/repos/masterRepository")(),
+			slaveRepository = require("./data/repos/slaveRepository")();
+		
+		//подключение контроллеров
+		const initRouter = require("./web/initRouter")(masterRepository, slaveRepository);
+		
+		server.use("/init", initRouter);
 
-//middlewares
-server.use(bodyParser.json())
-	.use(bodyParser.urlencoded({ extended: true }))
-	.use(morgan("dev"));
+	});
 
-//подключение моделей
-/*Master.initialize(sequelize);
-Slave.initialize(sequelize);
-
-sequelize.sync({ alter: true });*/
-
-/*require("./data/models/master")(sequelize);
-require("./data/models/slave")(sequelize);*/
-//подключение методов
-const masterRepository = require("./data/repos/masterRepository")(),
-	slaveRepository = require("./data/repos/slaveRepository")();
-
-//подключение контроллеров
-const initRouter = require("./web/initRouter")(masterRepository, slaveRepository);
-
-server.use("/init", initRouter);
 
 server.listen(PORT, async () => {
 	env["isProd"] === "false" ? 

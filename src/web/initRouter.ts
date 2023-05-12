@@ -1,4 +1,7 @@
 import express from "express";
+import typeRequestRepository from "../data/repos/typeRequestRepository";
+import servicesRepository from "../data/repos/servicesRepository";
+
 
 const initRouterInit = (masterRepos: any) => {
 	const router = express.Router();
@@ -7,8 +10,10 @@ const initRouterInit = (masterRepos: any) => {
 		const {masterAndSlave} = req.body;
 		//check body
 		//...
-		console.log(await masterRepos.createMasterAndSlaves(masterAndSlave));
-		res.send("Ok");
+		const trr = await typeRequestRepository.init();
+		const sr = await servicesRepository.init();
+		const status = trr && sr;
+		res.send(status);
 	});
 	return router;
 };
