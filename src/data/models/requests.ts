@@ -4,10 +4,11 @@ import {
 	Column,
 	BaseEntity,
 	ManyToOne,
-	JoinColumn
+	JoinColumn,
+	CreateDateColumn,
+	UpdateDateColumn
 } from "typeorm";
 import { 
-	IsInt,
 	Length
 } from "class-validator";
 import Services from "./services";
@@ -43,5 +44,9 @@ class Requests extends BaseEntity {
 	@ManyToOne(()=> TypeRequest)
 	@JoinColumn({name: "typeRequest_id", referencedColumnName: "typeRequest_id", foreignKeyConstraintName: "requestTypeRequest_id"})
 		TypeRequest: TypeRequest;
+	@CreateDateColumn()
+		createdAt: Date;
+	@UpdateDateColumn()
+		updatedAt: Date;
 }
 export = Requests;

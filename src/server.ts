@@ -17,7 +17,7 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	PORT = config.PORT;
 	postgres = config.postgres;
 	env["isProd"] = "false";
-	//console.log(postgres);
+
 } else if (env["NODE_ENV"] == "production") {
 	console.log("Production mode");
 	PORT = env?.["PORT"] !== undefined? +env?.["PORT"] : 3000;
@@ -28,7 +28,6 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 //импорт подключения к PostgreSQL
 import { dbCreateConnection } from "./data/dbCreateConnection";
 
-//инициализация моделей
 dbCreateConnection(postgres)
 	.then(() => {
 		//middlewares
@@ -36,23 +35,12 @@ dbCreateConnection(postgres)
 			.use(bodyParser.urlencoded({ extended: true }))
 			.use(morgan("dev"));
 		
-		//подключение моделей
-		/*Master.initialize(sequelize);
-		Slave.initialize(sequelize);
-		
-		sequelize.sync({ alter: true });*/
-		
-		/*require("./data/models/master")(sequelize);
-		require("./data/models/slave")(sequelize);*/
-		//подключение методов
-		const masterRepository = require("./data/repos/masterRepository")(),
-			slaveRepository = require("./data/repos/slaveRepository")();
-		
+		const initRouter = require("./web/initRouter")(),
+			requestsRouter = require("./web/requestsRouter")();
+			
 		//подключение контроллеров
-		const initRouter = require("./web/initRouter")(masterRepository, slaveRepository);
-		
 		server.use("/init", initRouter);
-
+		server.use("/requests", requestsRouter);
 	});
 
 
@@ -60,6 +48,4 @@ server.listen(PORT, async () => {
 	env["isProd"] === "false" ? 
 		console.log(`http://localhost:${PORT}`) :
 		console.log("https://q.ektu.kz");
-
-	
 });
