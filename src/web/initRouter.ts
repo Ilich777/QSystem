@@ -1,18 +1,15 @@
-import express from "express";
+import { Router } from "express";
 import typeRequestRepository from "../data/repos/typeRequestRepository";
 import servicesRepository from "../data/repos/servicesRepository";
 
-const initRouterInit = () => {
-	const router = express.Router();
+const initRouter = Router();
 
-	router.get("/", async (_: any , res: any) => {
-		const trr = await typeRequestRepository.init();
-		const sr = await servicesRepository.init();
-		
-		const status = trr && sr;
-		res.send(status);
-	});
-	return router;
-};
+initRouter.get("/", async (_: any , res: any) => {
+	const trr = await typeRequestRepository.init();
+	const sr = await servicesRepository.init();
+	
+	const status = trr && sr;
+	res.send(status);
+});
 
-export = initRouterInit;
+export { initRouter };

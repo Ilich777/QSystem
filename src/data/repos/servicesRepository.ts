@@ -31,5 +31,20 @@ class ServicesRepository {
 		}
 		return false;
 	}
+	public async getServices(): Promise<Services[]> {
+		try { 
+			const services = await Services.find({
+				select: {
+					service_id: true,
+					service_name: true,
+					abbreviation: true
+				}
+			});
+			return services;
+		} catch (error: any) {
+			throw new Error(error);
+		}
+
+	}
 }
 export default new ServicesRepository();

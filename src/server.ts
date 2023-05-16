@@ -9,6 +9,14 @@ const server	= Express(),
 let PORT!: number,
 	postgres: any;
 
+//импорт подключения к PostgreSQL
+import { dbCreateConnection } from "./data/dbCreateConnection";
+
+//импорт роутеров
+import { initRouter } from "./web/initRouter";
+import { requestsRouter } from "./web/requestsRouter";
+import { servicesRouter } from "./web/servicesRouter";
+
 if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	console.log("Development mode");
 
@@ -25,24 +33,18 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	env["isProd"] = "true";
 }
 
-//импорт подключения к PostgreSQL
-import { dbCreateConnection } from "./data/dbCreateConnection";
-
 dbCreateConnection(postgres)
 	.then(() => {
 		//middlewares
 		server.use(bodyParser.json())
 			.use(bodyParser.urlencoded({ extended: true }))
 			.use(morgan("dev"));
-		
-		const initRouter = require("./web/initRouter")(),
-			requestsRouter = require("./web/requestsRouter")();
 			
-		//подключение контроллеров
+		//подключение роутеров к эндпоинтам
 		server.use("/init", initRouter);
 		server.use("/requests", requestsRouter);
+		server.use("/services", servicesRouter);
 	});
-
 
 server.listen(PORT, async () => {
 	env["isProd"] === "false" ? 
