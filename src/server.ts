@@ -2,9 +2,16 @@
 import Express from "express";
 import bodyParser from "body-parser";
 import { env } from "process";
+import http from "http";
+import { Server } from "socket.io";
 
-const server	= Express(),
-	morgan 		= require("morgan");
+const app	= Express(),
+	morgan 		= require("morgan"),
+	server = http.createServer(app);
+	
+export const io = new Server(server);
+const s1 = io.of("/service_1");
+io.of("/service_2");
 
 let PORT!: number,
 	postgres: any;
@@ -36,14 +43,19 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 dbCreateConnection(postgres)
 	.then(() => {
 		//middlewares
-		server.use(bodyParser.json())
+		app.use(bodyParser.json())
 			.use(bodyParser.urlencoded({ extended: true }))
 			.use(morgan("dev"));
 			
+		s1.on("connection", () => {
+			console.log("a user connected");
+		});
+		
+
 		//подключение роутеров к эндпоинтам
-		server.use("/init", initRouter);
-		server.use("/requests", requestsRouter);
-		server.use("/services", servicesRouter);
+		app.use("/init", initRouter);
+		app.use("/requests", requestsRouter);
+		app.use("/services", servicesRouter);
 	});
 
 server.listen(PORT, async () => {

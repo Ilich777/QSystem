@@ -2,6 +2,7 @@ import { Router } from "express";
 import requestRepository from "../data/repos/requestRepository";
 
 const requestsRouter = Router();
+import { io } from "../server";
 requestsRouter.post("/",async (req: any, res: any) => {
 	const { body } = req;
 	try {
@@ -9,6 +10,10 @@ requestsRouter.post("/",async (req: any, res: any) => {
 		const code = await requestRepository.getUniqueCode(body.service.service_id);
 		Object.assign(body, code);
 		await requestRepository.create(body);
+		const serv_1 = io.of("/service_1");
+		serv_1.emit("message", {
+			name: "Создана новая заявка"
+		});
 		res.status(201).json(code);
 	} catch(e: any) {
 		res.status(400).json(e.message);
