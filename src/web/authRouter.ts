@@ -3,7 +3,7 @@ import passport from "passport";
 
 const authRouter = Router();
 
-authRouter.get("/unauth", (req: any, res: any) => {
+authRouter.get("/unauth", (_: any, res: any) => {
 	res.status(401).send("Unauthorized");
 });
 authRouter.get("/", (req: any, res: any, next: any) => {

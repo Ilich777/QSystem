@@ -6,12 +6,7 @@ import jwt from "jsonwebtoken";
 const strategyCallback = async function (_: any, __:any, refreshToken: any, ___: any, done: any) {
 
 	const payloadJwt = refreshToken.id_token,
-		{ payload } = jwt.decode(payloadJwt, { complete: true }),
-		email = payload.upn,
-		lowerEmail = email.toLowerCase(),
-		{ unique_name } = payload,
-		login = payload.winaccountname,
-		lowerLogin = login.toLowerCase();
+		{ payload } = jwt.decode(payloadJwt, { complete: true });
 	console.log(payload);
 	done(null, {
 		user: "good user"
