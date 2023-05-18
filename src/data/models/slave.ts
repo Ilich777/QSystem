@@ -17,9 +17,6 @@ class Slave extends BaseEntity {
 		length: 50
 	})
 		slave_name: string;
-	/*@OneToMany(() => Slave, (slaves) => slaves.master, {
-		cascade: true, onDelete: "CASCADE"
-	})*/
 	@ManyToOne(() => Master)
 	@JoinColumn({ name: "master_id"})
 		master: Master;

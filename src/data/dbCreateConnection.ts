@@ -1,6 +1,4 @@
-import {  
-	DataSource
-} from "typeorm";
+import { DataSource } from "typeorm";
 
 export const dbCreateConnection = async (postgres: any): Promise<DataSource>=> {
 	const ds = new DataSource({
