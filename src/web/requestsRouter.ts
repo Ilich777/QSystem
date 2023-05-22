@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import requestRepository from "../data/repos/requestRepository";
 
 const requestsRouter = Router();
 import { io } from "../server";
-requestsRouter.post("/",async (req: any, res: any) => {
+requestsRouter.post("/",async (req: Request, res: Response) => {
 	const { body } = req;
 	try {
 		await requestRepository.check(body);

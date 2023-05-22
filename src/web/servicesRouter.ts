@@ -1,8 +1,8 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import servicesRepository from "../data/repos/servicesRepository";
 
 const servicesRouter = Router();
-servicesRouter.get("/",async (_: any, res: any) => {
+servicesRouter.get("/",async (_: Request, res: Response) => {
 	try {
 		const allServices = await servicesRepository.getServices();
 		res.json(allServices);

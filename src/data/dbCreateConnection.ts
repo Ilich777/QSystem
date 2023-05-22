@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
-
-export const dbCreateConnection = async (postgres: any): Promise<DataSource>=> {
+import { Config } from "./types/Config";
+export const dbCreateConnection = async (postgres: Config["postgres"]): Promise<DataSource>=> {
 	const ds = new DataSource({
 		type: postgres.type,
 		host: postgres.host,

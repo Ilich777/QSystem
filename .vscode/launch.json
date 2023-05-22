@@ -9,11 +9,15 @@
             "internalConsoleOptions": "neverOpen",
             "name": "nodemon",
             "program": "${workspaceFolder}/dist/server.js",
+            "runtimeArgs": [
+                "--ignore",
+                "sessions/*"
+            ],
             "request": "launch",
             "restart": true,
             "runtimeExecutable": "nodemon",
             "skipFiles": [
-                "<node_internals>/**",
+                "<node_internals>/**"
             ],
             "type": "node"
         }

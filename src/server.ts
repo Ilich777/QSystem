@@ -1,5 +1,5 @@
 //подключение модулей
-import Express from "express";
+import express, { Express } from "express";
 import bodyParser from "body-parser";
 import { env } from "process";
 import http from "http";
@@ -10,17 +10,42 @@ import sessionFileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 
-const app = Express(),
+const app: Express  = express(),
 	server = http.createServer(app);
 
 export const io = new Server(server);
 const s1 = io.of("/service_1");
 io.of("/service_2");
 
-let PORT!: number,
-	postgres: any,
-	sessionOption: any,
-	passportCreds: any;
+import { Config } from "./data/types/Config";
+
+//Без этого работать не будет
+let PORT: Config["PORT"] = 3000,
+	postgres: Config["postgres"] = {
+		type: "postgres",
+		host: "test.test",
+		username: "test",
+		password: "test",
+		database: "test",
+		synchronize: true,
+		logging: false,
+		entities: ["test1"]
+	},
+	sessionOption: Config["sessionOption"] = {
+		secret: "test",
+		cookie: {
+			domain: "test",
+			httpOnly: true,
+			maxAge: 3600000,
+			path: "test",
+			sameSite: "lax"
+		},
+		name: "test",
+		resave: false,
+		rolling: true,
+		saveUninitialized:false
+	},
+	passportCreds: Config["passportCreds"];
 
 export { passportCreds };
 
@@ -34,7 +59,7 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	console.log("Development mode");
 	
 	// подключение конфига
-	const config = require("./data/conf/config");
+	const { config } = require("./data/conf/config");
 	PORT = config.PORT;
 	postgres = config.postgres;
 	sessionOption = config.sessionOption;
@@ -64,6 +89,7 @@ app.use(bodyParser.json())
 //импорт подключения к PostgreSQL
 import { dbCreateConnection } from "./data/dbCreateConnection";
 import "./data/passport";
+
 
 dbCreateConnection(postgres)
 	.then(() => {
