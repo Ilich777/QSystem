@@ -4,19 +4,28 @@ import {
 	isAuth,
 	allow
 } from "./service/AuthServices";
-
+type request = {
+	service: {
+        service_id: number
+    },
+    TypeRequest: {
+        typeRequest_id: number
+    }
+}
 const requestsRouter = Router();
 import { io } from "../server";
 requestsRouter.post("/",async (req: any, res: any) => {
 	const { body } = req;
 	try {
-		await requestRepository.check(body);
+		const service = await requestRepository.check(body);
 		const code = await requestRepository.getUniqueCode(body.service.service_id);
 		Object.assign(body, code);
-		await requestRepository.create(body);
-		const serv_1 = io.of("/service_1");
-		serv_1.emit("message", {
-			name: "Создана новая заявка"
+		const request = await requestRepository.create(body);
+		const client = io.of(`/${code.unique_code[0]}`);
+		client.emit("create", {
+			status: "B ожидании",
+			code: request.unique_code,
+			service: service.abbreviation
 		});
 		res.status(201).json(code);
 	} catch(e: any) {

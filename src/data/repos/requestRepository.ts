@@ -11,14 +11,14 @@ interface Code {
 	unique_code: string;
 }
 class RequestRepository {
-	async check(body:Requests):Promise<boolean> {
+	async check(body:Requests):Promise<Services> {
 		let service: Services | null,
 			typeRequest: TypeRequest | null;
 		if (!Object.hasOwn(body, "service") || !Object.hasOwn(body, "TypeRequest"))
 			throw new Error("Body is empty");
 		try {
 			service = await Services.findOneBy({service_id: body.service.service_id});
-			if (!service)
+			if (!service || body.service.service_id === 3)
 				throw new Error("Service unavailable");
 			typeRequest = await TypeRequest.findOneBy({typeRequest_id: body.TypeRequest.typeRequest_id});
 			if (!typeRequest)
@@ -26,7 +26,7 @@ class RequestRepository {
 		} catch (error: any) {
 			throw new Error(error);
 		}
-		return true;
+		return service;
 		
 	}
 	async getUniqueCode(service_id:number):Promise<Code>{
@@ -60,14 +60,14 @@ class RequestRepository {
 		}
 		return { unique_code: uniqueCode };
 	}
-	async create(body: Requests):Promise<boolean>{
+	async create(body: Requests):Promise<Requests>{
 		const request = new Requests();
 		request.unique_code = body.unique_code;
 		request.service = body.service;
 		request.TypeRequest = body.TypeRequest;
 		try { 
 			await request.save();
-			return true;
+			return request;
 		} catch (error: any) {
 			throw new Error(error);
 		}

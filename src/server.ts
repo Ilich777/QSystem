@@ -14,8 +14,8 @@ const app  = express(),
 	server = http.createServer(app);
 
 export const io = new Server(server);
-const s1 = io.of("/service_1");
-io.of("/service_2");
+const s1 = io.of(/^\/[A-Z]{1}$/);
+//io.of("/B");
 
 import { Config } from "./data/types/Config";
 
@@ -94,8 +94,14 @@ import "./data/passport";
 
 dbCreateConnection(postgres)
 	.then(() => {
-		s1.on("connection", () => {
-			console.log("a user connected");
+		s1.on("connection", (socket) => {
+			console.log(`a user ${socket.nsp.name[1]} connected`);
+			/*socket.on("connection", (socket) => {
+				console.log("a user connected");
+			});*/
+			socket.on("disconnect", () => {
+				console.log(`a user ${socket.nsp.name[1]} disconnected`);
+			});
 		});
 
 		//подключение роутеров к эндпоинтам
