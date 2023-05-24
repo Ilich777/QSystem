@@ -73,5 +73,16 @@ class RequestRepository {
 		}
 
 	}
+	async getTodayRequests():Promise<boolean>{
+		const today = moment().utcOffset(6).format(moment.HTML5_FMT.DATE);
+		await Requests.find({select:{
+			unique_code: true,
+			status_id: true
+		},
+		where:{
+			createdAt: MoreThan(new Date(today))
+		}});
+		return true;
+	}
 }
 export default new RequestRepository();

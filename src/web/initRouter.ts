@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import typeRequestRepository from "../data/repos/typeRequestRepository";
 import servicesRepository from "../data/repos/servicesRepository";
 import { 
@@ -10,7 +10,7 @@ const initRouter = Router();
 
 initRouter.get("/", 
 	isAuth, 
-	allow("operator", async (_: Request , res: Response) => {
+	allow("admin", async (_: any , res: any) => {
 		const trr = await typeRequestRepository.init();
 		const sr = await servicesRepository.init();
 		

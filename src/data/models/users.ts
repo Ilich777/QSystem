@@ -3,7 +3,7 @@ import {
 	PrimaryGeneratedColumn,
 	Column,
 	BaseEntity,
-	OneToOne,
+	ManyToOne,
 	JoinColumn
 } from "typeorm";
 import { 
@@ -27,8 +27,13 @@ class Users extends BaseEntity {
 		enum: roles,
 		default: roles.guest,
 	})
-		role: typeof roles;
-	@OneToOne(() => Services)
+		role: string;
+	@Column({
+		nullable: true,
+		default: null
+	})
+		number: string;
+	@ManyToOne(() => Services)
 	@JoinColumn({name: "service_id", referencedColumnName: "service_id", foreignKeyConstraintName: "userService_id"})
 		service: Services;
 }

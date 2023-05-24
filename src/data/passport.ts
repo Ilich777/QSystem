@@ -4,7 +4,6 @@ import { passportCreds } from "../server";
 import jwt from "jsonwebtoken";
 import Users from "./models/users";
 import Services from "./models/services";
-import { Request } from "express";
 
 const strategyCallback = async function (_: Request, __: any, refreshToken: any, ___: any, done: any) {
 

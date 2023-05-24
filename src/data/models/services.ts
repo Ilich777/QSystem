@@ -5,7 +5,6 @@ import {
 	BaseEntity
 } from "typeorm";
 import { 
-	IsInt,
 	Length
 } from "class-validator";
 
@@ -24,8 +23,5 @@ class Services extends BaseEntity {
 	@Column()
 	@Length(1, 2)
 		code: string;
-	@Column()
-	@IsInt()
-		window: number;
 }
 export = Services;

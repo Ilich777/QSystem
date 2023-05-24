@@ -1,5 +1,5 @@
 import { userRolesConfig } from "../../data/userRoles";
-import { Response, NextFunction } from "express";
+
 const { accessLevels } = userRolesConfig;
 type accessLevel = keyof typeof userRolesConfig.accessLevels;
 
@@ -18,7 +18,7 @@ export const allow = function (accessLevel: accessLevel, callback: any) {
 	return checkUserRole;
 };
 
-export const isAuth = (req: any, res : Response, next : NextFunction) => {
+export const isAuth = (req: any, res: any, next: any) => {
 	if(req.isAuthenticated()) {
 		next();
 	} else {

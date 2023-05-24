@@ -1,5 +1,5 @@
 //подключение модулей
-import express, { Express } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import { env } from "process";
 import http from "http";
@@ -10,7 +10,7 @@ import sessionFileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 
-const app: Express  = express(),
+const app  = express(),
 	server = http.createServer(app);
 
 export const io = new Server(server);
@@ -54,6 +54,7 @@ import { initRouter } from "./web/initRouter";
 import { requestsRouter } from "./web/requestsRouter";
 import { servicesRouter } from "./web/servicesRouter";
 import { authRouter } from "./web/authRouter";
+import { userRouter } from "./web/userRouter";
 
 if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	console.log("Development mode");
@@ -102,6 +103,7 @@ dbCreateConnection(postgres)
 		app.use("/init", initRouter);
 		app.use("/requests", requestsRouter);
 		app.use("/services", servicesRouter);
+		app.use("/users", userRouter);
 	});
 
 server.listen(PORT, async () => {

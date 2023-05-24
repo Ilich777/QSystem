@@ -8,14 +8,12 @@ class ServicesRepository {
 				{
 					service_name: "Школа информационных технологий",
 					abbreviation: "ШИТ",
-					code: "A",
-					window: 1
+					code: "A"
 				},
 				{
 					service_name: "Школа бизнеса и предпринимательства",
 					abbreviation: "ШБП",
-					code: "B",
-					window: 2
+					code: "B"
 				}
 			];
 			for(let i = 0; i < servicesList.length; i++) {
@@ -24,7 +22,6 @@ class ServicesRepository {
 				s.service_name = servicesList[i].service_name;
 				s.abbreviation = servicesList[i].abbreviation;
 				s.code = servicesList[i].code;
-				s.window = servicesList[i].window;
 				await s.save();
 			}
 			return true;	

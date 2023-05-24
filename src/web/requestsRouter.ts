@@ -1,9 +1,13 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import requestRepository from "../data/repos/requestRepository";
+import { 
+	isAuth,
+	allow
+} from "./service/AuthServices";
 
 const requestsRouter = Router();
 import { io } from "../server";
-requestsRouter.post("/",async (req: Request, res: Response) => {
+requestsRouter.post("/",async (req: any, res: any) => {
 	const { body } = req;
 	try {
 		await requestRepository.check(body);
@@ -19,5 +23,10 @@ requestsRouter.post("/",async (req: Request, res: Response) => {
 		res.status(400).json(e.message);
 	}
 });
+requestsRouter.get("/", 
+	isAuth,
+	allow("operator", async (_: any, __: any) => {
+		await requestRepository.getTodayRequests();
+	}));
 
 export { requestsRouter };
