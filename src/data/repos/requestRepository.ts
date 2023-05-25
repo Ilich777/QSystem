@@ -1,3 +1,4 @@
+import { request } from "../../web/requestsRouter";
 import Requests from "../models/requests";
 import Services from "../models/services";
 import TypeRequest from "../models/typeRequest";
@@ -10,8 +11,13 @@ import {
 interface Code {
 	unique_code: string;
 }
+type bodyForCheck = {
+	service: Services,
+	typeRequest: TypeRequest
+}
+export interface RequestForSaving extends request, Code {}
 class RequestRepository {
-	async check(body:Requests):Promise<Services> {
+	async check(body:request):Promise<bodyForCheck> {
 		let service: Services | null,
 			typeRequest: TypeRequest | null;
 		if (!Object.hasOwn(body, "service") || !Object.hasOwn(body, "TypeRequest"))
@@ -26,7 +32,10 @@ class RequestRepository {
 		} catch (error: any) {
 			throw new Error(error);
 		}
-		return service;
+		return {
+			service: service,
+			typeRequest: typeRequest
+		};
 		
 	}
 	async getUniqueCode(service_id:number):Promise<Code>{
@@ -60,11 +69,11 @@ class RequestRepository {
 		}
 		return { unique_code: uniqueCode };
 	}
-	async create(body: Requests):Promise<Requests>{
+	async create(body: bodyForCheck, code: Code):Promise<Requests>{
 		const request = new Requests();
-		request.unique_code = body.unique_code;
+		request.unique_code = code.unique_code;
 		request.service = body.service;
-		request.TypeRequest = body.TypeRequest;
+		request.TypeRequest = body.typeRequest;
 		try { 
 			await request.save();
 			return request;

@@ -1,5 +1,5 @@
-type Config = {
-    PORT: 3000;
+interface Config  {
+    PORT: number;
     postgres:  {
 		type: "postgres";
 		host: string;
@@ -17,7 +17,7 @@ type Config = {
 			httpOnly: boolean;
 			maxAge: number;
 			path: string;
-			sameSite: string;
+			sameSite: boolean | "lax" | "strict" | "none" | undefined;
 		};
 		name: string;
 		resave: boolean;
@@ -28,8 +28,9 @@ type Config = {
 		authorizationURL: string;
 		tokenURL: string;
 		clientID: string;
+		clientSecret: string;
 		callbackURL: string;
-		passReqToCallback: boolean;
+		passReqToCallback: false | undefined;
 	};
 }
 export { Config };

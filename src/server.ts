@@ -1,5 +1,5 @@
 //подключение модулей
-import express from "express";
+import express, {Express} from "express";
 import bodyParser from "body-parser";
 import { env } from "process";
 import http from "http";
@@ -10,7 +10,7 @@ import sessionFileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 
-const app  = express(),
+const app : Express = express(),
 	server = http.createServer(app);
 
 export const io = new Server(server);
@@ -18,6 +18,22 @@ const s1 = io.of(/^\/[A-Z]{1}$/);
 //io.of("/B");
 
 import { Config } from "./data/types/Config";
+import { StrategyOptions } from "passport-oauth2";
+/*interface SessionOptionStore {
+		secret: string;
+		store: session.Store;
+		cookie: {
+			domain: string;
+			httpOnly: boolean;
+			maxAge: number;
+			path: string;
+			sameSite: boolean | "lax" | "strict" | "none" | undefined;
+		};
+		name: string;
+		resave: boolean;
+		rolling: boolean;
+		saveUninitialized: boolean;
+}*/
 
 //Без этого работать не будет
 let PORT: Config["PORT"] = 3000,
@@ -31,7 +47,7 @@ let PORT: Config["PORT"] = 3000,
 		logging: false,
 		entities: ["test1"]
 	},
-	sessionOption: Config["sessionOption"] = {
+	sessionOption: session.SessionOptions = {
 		secret: "test",
 		cookie: {
 			domain: "test",
@@ -45,7 +61,7 @@ let PORT: Config["PORT"] = 3000,
 		rolling: true,
 		saveUninitialized:false
 	},
-	passportCreds: Config["passportCreds"];
+	passportCreds: StrategyOptions;
 
 export { passportCreds };
 
@@ -61,29 +77,29 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	
 	// подключение конфига
 	const { config } = require("./data/conf/config");
+	passportCreds = config.passportCreds;
 	PORT = config.PORT;
 	postgres = config.postgres;
 	sessionOption = config.sessionOption;
-	passportCreds = config.passportCreds;
 	env["isProd"] = "false";
 	
 } else if (env["NODE_ENV"] == "production") {
 	console.log("Production mode");
-	PORT = env["PORT"];
-	postgres = JSON.parse(env["POSTGRES"]);
-	sessionOption = JSON.parse(env["SESSION"]);
-	passportCreds = JSON.parse(env["OAuth2Creds"]);
+	PORT = Number(env["PORT"] !== undefined ? env["PORT"] : "3000");
+	postgres = JSON.parse(env["POSTGRES"]!== undefined ? env["POSTGRES"] : "{}");
+	sessionOption = JSON.parse(env["SESSION"]!== undefined ? env["SESSION"] : "{}");
+	passportCreds = JSON.parse(env["OAuth2Creds"]!== undefined ? env["OAuth2Creds"] : "{}");
 	env["isProd"] = "true";
 }
 
 const FileStore = sessionFileStore(session);
-
+const sess = Object.assign(sessionOption, { store: new FileStore() });
 //middlewares
 app.use(bodyParser.json())
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(morgan("dev"))
 	.use(cookieParser())
-	.use(session(Object.assign(sessionOption, { store: new FileStore() })))
+	.use(session(sess))
 	.use(passport.initialize())
 	.use(passport.session());
 	

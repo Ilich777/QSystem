@@ -1,16 +1,19 @@
 import passport from "passport";
 import { Strategy as OAuth2Strategy } from "passport-oauth2";
 import { passportCreds } from "../server";
-import jwt from "jsonwebtoken";
+import decode from "jwt-decode";
 import Users from "./models/users";
 import Services from "./models/services";
-
-const strategyCallback = async function (_: Request, __: any, refreshToken: any, ___: any, done: any) {
+interface Payload {
+	unique_name: string,
+	commonname: string
+}
+const strategyCallback = async function (__: any, refreshToken: any, ___: any, done: any) {
 
 	const payloadJwt = refreshToken.id_token,
-		{ payload } = jwt.decode(payloadJwt, { complete: true }),
-		login : string = payload?.unique_name,
-		user_name: string = payload.commonname;
+		payload : Payload = decode(payloadJwt),
+		login = payload.unique_name,
+		user_name = payload.commonname;
 	let findedUser,
 		lowerLogin;
 
