@@ -10,7 +10,7 @@ const initRouter = Router();
 
 initRouter.get("/", 
 	isAuth, 
-	allow("admin", async (_: any , res: any) => {
+	allow("operator", async (_: any , res: any) => {
 		const trr = await typeRequestRepository.init();
 		const sr = await servicesRepository.init();
 		

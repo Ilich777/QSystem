@@ -63,7 +63,7 @@ let PORT: Config["PORT"] = 3000,
 	},
 	passportCreds: StrategyOptions;
 
-export { passportCreds };
+export { passportCreds, postgres };
 
 //импорт роутеров
 import { initRouter } from "./web/initRouter";
@@ -107,8 +107,7 @@ app.use(bodyParser.json())
 import { dbCreateConnection } from "./data/dbCreateConnection";
 import "./data/passport";
 
-
-dbCreateConnection(postgres)
+export const ds = dbCreateConnection(postgres)
 	.then(() => {
 		s1.on("connection", (socket) => {
 			console.log(`a user ${socket.nsp.name[1]} connected`);

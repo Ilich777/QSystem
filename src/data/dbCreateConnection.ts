@@ -12,7 +12,7 @@ export const dbCreateConnection = async (postgres: Config["postgres"]): Promise<
 		entities: postgres.entities
 	});
 	const connection = ds;
-	connection.initialize()
+	await connection.initialize()
 		.then(() => {
 			console.log("DB Connected");
 		})
