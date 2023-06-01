@@ -5,10 +5,15 @@ import decode from "jwt-decode";
 import Users from "./models/users";
 import Services from "./models/services";
 import { userRolesConfig as roles } from "./userRoles";
-//import { dbCreateConnection } from "./dbCreateConnection";
+
 interface Payload {
 	unique_name: string,
 	commonname: string
+}
+export interface User {
+	login: string,
+	role: string,
+	service_id: number
 }
 const strategyCallback = async function (_: any, __: any, refreshToken: any, ___: any, done: any) {
 
@@ -16,9 +21,8 @@ const strategyCallback = async function (_: any, __: any, refreshToken: any, ___
 		payload : Payload = decode(payloadJwt),
 		login = payload.unique_name,
 		user_name = payload.commonname;
-	let findedUser,
+	let findedUser: Users | null,
 		lowerLogin = "";
-	//const ds = await dbCreateConnection(postgres);	
 
 	if(login !== undefined) {
 		try {
@@ -45,15 +49,6 @@ const strategyCallback = async function (_: any, __: any, refreshToken: any, ___
 		throw new Error("missing uniquename in payload");
 	}
 	
-	/*let FUser: {
-		login: string,
-		role: string,
-		service_id: number
-	} = {
-		login: "",
-		role: "",
-		service_id: 1
-	};*/
 	if(findedUser === null) {
 		const user = new Users();
 		user.user_name = user_name;
@@ -70,18 +65,12 @@ const strategyCallback = async function (_: any, __: any, refreshToken: any, ___
 		}
 		done("Contact administrator");
 	} else if(roles.accessLevels.operator.includes(findedUser.role)) {
-		/*dbCreateConnection(postgres)
-			.then(async (connection)=>{
-				FUser = await connection.query("SELECT login, role, service_id FROM users WHERE login=$1", [lowerLogin]);
-				console.log(FUser);
-			
-				
-			});*/
-		done(null, {
+		const user: User = {
 			login: findedUser?.login,
 			role: findedUser?.role,
 			service_id: findedUser?.service.service_id
-		});
+		};
+		done(null, user);
 	} else {
 		done("Contact administrator");
 	}

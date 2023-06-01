@@ -9,10 +9,12 @@ import {
 	UpdateDateColumn
 } from "typeorm";
 import { 
-	Length
+	Length, 
+	Validate
 } from "class-validator";
 import Services from "./services";
 import TypeRequest from "./typeRequest";
+import { checkStatus_id } from "../validation";
 
 enum status_id {
 	waiting = 1,
@@ -34,6 +36,7 @@ class Requests extends BaseEntity {
 		enum: status_id,
 		default: status_id.waiting,
 	})
+	@Validate(checkStatus_id, {message: "Недопустимый статус!"})
 		status_id: status_id;
 	@Column()
 	@Length(2, 8)
@@ -49,4 +52,4 @@ class Requests extends BaseEntity {
 	@UpdateDateColumn()
 		updatedAt: Date;
 }
-export = Requests;
+export { Requests };

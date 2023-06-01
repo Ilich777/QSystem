@@ -1,5 +1,5 @@
 import { request } from "../../web/requestsRouter";
-import Requests from "../models/requests";
+import { Requests } from "../models/requests";
 import Services from "../models/services";
 import TypeRequest from "../models/typeRequest";
 import moment from "moment";
@@ -7,6 +7,9 @@ import {
 	Equal,
 	MoreThan
 } from "typeorm";
+import { dbCreateConnection } from "./../dbCreateConnection";
+import { postgres } from "../../server";
+import { Validator } from "class-validator";
 
 interface Code {
 	unique_code: string;
@@ -15,9 +18,14 @@ type bodyForCheck = {
 	service: Services,
 	typeRequest: TypeRequest
 }
+interface Request {
+	unique_code: string,
+	status_id: number,
+	service_name: string
+}
 export interface RequestForSaving extends request, Code {}
 class RequestRepository {
-	async check(body:request):Promise<bodyForCheck> {
+	async checkBeforeCreate(body:request):Promise<bodyForCheck> {
 		let service: Services | null,
 			typeRequest: TypeRequest | null;
 		if (!Object.hasOwn(body, "service") || !Object.hasOwn(body, "TypeRequest"))
@@ -82,16 +90,62 @@ class RequestRepository {
 		}
 
 	}
-	async getTodayRequests():Promise<boolean>{
+	
+	async getTodayRequests(service_id: number):Promise<Request[]>{
 		const today = moment().utcOffset(6).format(moment.HTML5_FMT.DATE);
-		await Requests.find({select:{
-			unique_code: true,
-			status_id: true
-		},
-		where:{
-			createdAt: MoreThan(new Date(today))
-		}});
-		return true;
+
+		const connection = await dbCreateConnection(postgres);
+		const result: Request[] = await connection.query("SELECT unique_code, status_id, s.service_name FROM requests r INNER JOIN services s USING(service_id) WHERE service_id=$1 AND r.\"createdAt\" > $2 AND status_id =$3", [service_id, today, 1]);
+
+		return result;
 	}
+
+	async getStatus(request_id: number) : Promise<number> {
+		try {
+			const request = await Requests.findOne({
+				select: {
+					status_id: true
+				},
+				where: {
+					request_id
+				}
+			});
+			if(request?.status_id !== undefined)
+				return request.status_id;
+			else
+				throw new Error("Request not found");
+		} catch (e: any) {
+			throw new Error(e);
+		}
+
+		
+	}
+
+	async changeStatus(req_id: number, status_id: number) : Promise<boolean> {
+		try {
+			const request = await Requests.findOne({where:{
+				request_id: req_id
+			}});
+			if (request !== null) {
+				request.status_id = status_id;
+				const validator = new Validator();
+				await validator.validate(request).then(errors => {
+					if (errors.length > 0) {
+						const [er] = errors;
+						if (er.constraints !== undefined)
+							throw new Error(er?.constraints["Status_id"]);
+
+					}
+				});
+				await request.save();
+				return true;
+			} else {
+				throw new Error("User not found!");
+			}
+		} catch (e:any) {
+			throw new Error(e);
+		}
+	} 
+
 }
 export default new RequestRepository();
