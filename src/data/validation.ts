@@ -1,5 +1,6 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from "class-validator";
 import { Requests } from "./models/requests";
+import requestRepository from "./repos/requestRepository";
 
 const status_id =  {
 	waiting: 1,
@@ -23,15 +24,10 @@ const availableStatus_id = {
 export class checkStatus_id implements ValidatorConstraintInterface {
 	async validate(newStatusId: number, args: ValidationArguments) {
 		const { request_id } = args.object as Requests;
-		const reqById = await Requests.findOne({
-			where:{
-				request_id
-			}
-		});
-
-		if (reqById === null) 
+		const status_id = await requestRepository.getStatus(request_id);
+		if (status_id === null) 
 			return false;
-		if (availableStatus_id[reqById.status_id].includes(newStatusId) === true)
+		if (availableStatus_id[status_id].includes(newStatusId) === true)
 			return true;
 		else
 			return false;
