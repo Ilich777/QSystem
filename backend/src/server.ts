@@ -27,6 +27,13 @@ import session from "express-session";
 import sessionFileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import passport from "passport";
+import cors from "cors";
+
+const corsOptions = {
+	origin: "http://localhost:4000",
+	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
 
 const app : Express = express(),
 	server = http.createServer(app);
@@ -119,7 +126,8 @@ app.use(bodyParser.json())
 	.use(cookieParser())
 	.use(session(sess))
 	.use(passport.initialize())
-	.use(passport.session());
+	.use(passport.session())
+	.use(cors(corsOptions));
 	
 //импорт подключения к PostgreSQL
 import { dbCreateConnection } from "./data/dbCreateConnection";
