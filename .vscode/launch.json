@@ -8,7 +8,7 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "name": "nodemon",
-            "program": "${workspaceFolder}/dist/server.js",
+            "program": "${workspaceFolder}/backend/dist/server.js",
             "runtimeArgs": [
                 "--ignore",
                 "sessions/*"

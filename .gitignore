@@ -1,5 +1,5 @@
-node_modules
-sessions
-src/data/conf/config.ts
-dist/data/conf/config.js
-dist
+backend/node_modules
+backend/sessions
+backend/src/data/conf/config.ts
+backend/dist/data/conf/config.js
+backend/dist

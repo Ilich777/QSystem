@@ -14,11 +14,11 @@ ENV API=$api
 ENV NODE_ENV=production
 
 WORKDIR /usr/qsystem
-COPY package*.json ./
-COPY tsconfig*.json ./
+COPY ./backend/package*.json ./
+COPY ./backend/tsconfig*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
-LABEL artifacts='{"paths": ["./dist/"]}'
-CMD ["node", "./dist/server.js"]
+LABEL artifacts='{"paths": ["./backend/dist/"]}'
+CMD ["node", "./backend/dist/server.js"]
 EXPOSE 3000
