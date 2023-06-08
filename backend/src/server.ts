@@ -118,7 +118,7 @@ if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 }
 
 const FileStore = sessionFileStore(session);
-const sess = Object.assign(sessionOption, { store: new FileStore() });
+const sess = Object.assign(sessionOption, { store: new FileStore({path: "./backend/sessions"}) });
 //middlewares
 app.use(bodyParser.json())
 	.use(bodyParser.urlencoded({ extended: true }))
