@@ -5,10 +5,12 @@ variables:
   varSession: ${SESSION}
   varApi: ${API}
 stages:
-    - build
+    - build_backend
+    - build_frontend
+    - run_server
     - k8s
-build-docker:
-  stage: build
+build_backend:
+  stage: build_backend
   image: docker:stable
   tags:
     - gitlab-docker
@@ -17,9 +19,44 @@ build-docker:
   before_script:
     - docker login -u DeployQS -p ${ACCESS_TOKEN} gitlab.ektu.kz:5050
   script:
-    - docker build --build-arg port=${varPort} --build-arg creds=${varCreds} --build-arg postgres=${varPostgres} --build-arg session=${varSession} --build-arg api=${varApi} -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID ./backend/
+    - docker build --build-arg port=${varPort} --build-arg creds=${varCreds} --build-arg postgres=${varPostgres} --build-arg session=${varSession} --build-arg api=${varApi} -t backend ./backend
+  artifacts:
+    paths:
+      - ./dist/
+  when: always
+build_frontend:
+  stage: build_frontend
+  image: docker:stable
+  tags:
+    - gitlab-docker
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u DeployQS -p ${ACCESS_TOKEN} gitlab.ektu.kz:5050
+  script:
+    - docker build -t frontend ./frontend/terminal
+  artifacts:
+    paths:
+      - ./build/
+  when: always
+final_job:
+  stage: run_server
+  image: docker:stable
+  tags:
+    - gitlab-docker
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u DeployQS -p ${ACCESS_TOKEN} gitlab.ektu.kz:5050
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID .
     - docker push $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
   when: always
+  needs:
+    - job: build_backend
+      artifacts: true
+    - job: build_frontend
+      artifacts: true
 deploy-k8s:
   stage: k8s
   variables:

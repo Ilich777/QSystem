@@ -28,6 +28,7 @@ import sessionFileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import cors from "cors";
+import path from "path";
 
 const corsOptions = {
 	origin: "http://localhost:4000",
@@ -128,6 +129,12 @@ app.use(bodyParser.json())
 	.use(passport.initialize())
 	.use(passport.session())
 	.use(cors(corsOptions));
+
+app.use(express.static(path.join(__dirname, "..", "..", "frontend", "terminal", "build")));
+
+app.get("/", function (_, res) {
+	res.sendFile(path.join(__dirname, "..", "..", "frontend", "terminal", "build", "index.html"));
+});
 	
 //импорт подключения к PostgreSQL
 import { dbCreateConnection } from "./data/dbCreateConnection";
@@ -154,7 +161,19 @@ export const ds = dbCreateConnection(postgres)
 	});
 
 server.listen(PORT, async () => {
-	env["isProd"] === "false" ?
-		console.log(`http://localhost:${PORT}`) :
+	if(env["isProd"] === "false"){
+		console.log(`Server started at http://localhost:${PORT}`);
+		console.log(" ");
+		console.log("Build TypeScript in watch mode:");
+		console.log("cd backend");
+		console.log("tsc -w");
+		console.log(" ");
+		console.log("Build React:");
+		console.log("cd ..");
+		console.log("npm run build --prefix frontend/terminal");
+		console.log(" ");
+		console.log("Start server:");
+		console.log("F5");
+	} else 
 		console.log("https://q.ektu.kz");
 });
