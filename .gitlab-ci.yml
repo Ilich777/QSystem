@@ -22,7 +22,7 @@ build_backend:
     - docker build --build-arg port=${varPort} --build-arg creds=${varCreds} --build-arg postgres=${varPostgres} --build-arg session=${varSession} --build-arg api=${varApi} -t backend ./backend
   artifacts:
     paths:
-      - ./dist/
+      - backend/dist/
   when: always
 build_frontend:
   stage: build_frontend
@@ -37,7 +37,7 @@ build_frontend:
     - docker build -t frontend ./frontend/terminal
   artifacts:
     paths:
-      - ./build/
+      - frontend/terminal/build
   when: always
 final_job:
   stage: run_server
@@ -49,7 +49,7 @@ final_job:
   before_script:
     - docker login -u DeployQS -p ${ACCESS_TOKEN} gitlab.ektu.kz:5050
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID .
+    - docker build --build-arg BACKEND_PATH=./backend/dist/ --build-arg FRONTEND_PATH=./frontend/build/ -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID .
     - docker push $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
   when: always
   needs:

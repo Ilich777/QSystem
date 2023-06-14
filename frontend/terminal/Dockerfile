@@ -7,5 +7,4 @@ RUN npm install
 
 COPY . .
 RUN npm run build
-LABEL artifacts='{"paths": ["./build/"]}'
 
