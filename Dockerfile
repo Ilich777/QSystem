@@ -1,11 +1,37 @@
 FROM node:18-alpine
 
-ARG BACKEND_PATH
-ARG FRONTEND_PATH
+ARG port
+ARG creds
+ARG postgres
+ARG session
+ARG api
 
-WORKDIR /usr/qsystem/
-COPY $BACKEND_PATH ./backend/dist
-COPY $FRONTEND_PATH ./frontend/terminal/build
-CMD ["node", "./backend/dist/server.js"]
+ENV PORT=$port
+ENV OAuth2Creds=$creds
+ENV POSTGRES=$postgres
+ENV SESSION=$session
+ENV API=$api
+ENV NODE_ENV=production
+
+WORKDIR /usr/qsystem/backend
+
+COPY ./backend/package*.json ./
+COPY ./backend/tsconfig.json ./
+RUN npm install
+
+COPY ./backend .
+RUN npm run build
+
+WORKDIR /usr/qsystem/frontend/terminal
+
+COPY ./frontend/terminal/package*.json .
+COPY ./frontend/terminal/tsconfig.json .
+RUN npm install
+
+COPY ./frontend/terminal .
+RUN npm run build
+
+WORKDIR /usr/qsystem/backend/dist
+RUN npm run start
 
 EXPOSE $port
