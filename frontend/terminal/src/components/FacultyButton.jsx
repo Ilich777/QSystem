@@ -1,15 +1,21 @@
 import React from 'react';
 import Button from '@mui/material/Button/Button';
 
-const FacultyButton = ({ faculty, onClick }) => {
+const FacultyButton = ({id, faculty, onClick }) => {
   
 	return (
-    <Button 
-			onClick={onClick}
+		<Button
+			id={id}
 			sx={{
-				width: 300,
+				marginTop: 5,
+				height: 80,
+				fontFamily: "Arial",
+				fontSize: 20
 			}}
-			>{faculty}</Button>
+			onClick={onClick}
+			variant="outlined"
+			color="primary"
+		>{faculty}</Button>
   );
 };
 

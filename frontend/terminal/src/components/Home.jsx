@@ -3,13 +3,11 @@ import FacultyButton from './FacultyButton';
 import Container from '@mui/material/Container/Container';
 import {
 	Typography,
-	Button,
 	FormControl
 } from '@mui/material';
 
 const Home = () => {
 	const [services, setServices] = useState([]);
-	const [selectedId, setSelectedId] = useState("");
 
 	async function postData(url, obj) {
 		try {
@@ -28,59 +26,46 @@ const Home = () => {
 		}
 	}
 
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		console.log(event)
-		const body = {
-			service: {
-				service_id: selectedId
-			},
-			TypeRequest: {
-			typeRequest_id: 3
-			}
-		};
-		postData("http://localhost:3000/requests/create", body);
-		// Process the selectedFaculty value or make an API request
-	};
-
   useEffect(() => {
-    fetch("http://localhost:3000/services/")
+    fetch("/services/")
 			.then(response => response.json())
 			.then(json => setServices(json));
   }, []);
 
-  const handleFacultyClick = (service_id) => {
-		console.log(service_id);
-		setSelectedId(service_id);
-    // Send POST request with facultyId to the server
+  const handleFacultyClick = (event) => {
+		const service_id = event.target.id;
+		const body = {
+			service: {
+				service_id: service_id
+			},
+			TypeRequest: {
+				typeRequest_id: 3
+			}
+		};
+		postData("/requests/create", body)
+			.then(response => response.json())
+			.then(json => console.log(json));
   };
 
   return (
 		<Container maxWidth="sm">
-      <Typography variant="h4" align="center" gutterBottom>
-        Select Faculty
+      <Typography variant="h4" mt={5} gutterBottom sx={{ color: '#161227' }}> 
+        Выберите факультет
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <form>
         <FormControl fullWidth margin="normal">
-				<div className="services-list">
-			<div className='selectedId' display="none" value={selectedId} ></div>
-      {/* Map over 'services' and render each service */}
-      {services.map(service => (
-        <FacultyButton
-          key={service.service_id}
-          faculty={service.service_name}
-          onClick={() => handleFacultyClick(service.service_id)}
-        />
-      ))}
-    </div>
+					<div className="services-list">
+						{/* Map over 'services' and render each service */}
+						{services.map(service => (
+							<FacultyButton
+								id={service.service_id}
+								key={service.service_id}
+								faculty={service.service_name}
+								onClick={handleFacultyClick}
+							></FacultyButton>
+						))}
+					</div>
 				</FormControl>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-        >
-          Submit
-        </Button>
       </form>
 		</Container>
   );

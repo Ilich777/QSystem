@@ -12,7 +12,7 @@ const Header = () => {
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static">
 				<Toolbar className="App-header">
-					<Typography variant="h6">QSystem</Typography>
+					<Typography variant="h3" mt={2} gutterBottom>QSystem</Typography>
 				</Toolbar>
 			</AppBar>
 		</Box>
