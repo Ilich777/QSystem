@@ -32,6 +32,6 @@ COPY ./frontend/terminal .
 RUN npm run build
 
 WORKDIR /usr/qsystem/backend/dist
-RUN npm run start
+CMD ["node", "./server.js"]
 
 EXPOSE $port
