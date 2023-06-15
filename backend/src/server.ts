@@ -27,13 +27,13 @@ import session from "express-session";
 import sessionFileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import cors from "cors";
+//import cors from "cors";
 import path from "path";
 
-const corsOptions = {
+/*const corsOptions = {
 	origin: ["http://localhost:4000", "https://q.ektu.kz"],
 	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+};*/
 
 
 const app : Express = express(),
@@ -127,8 +127,8 @@ app.use(bodyParser.json())
 	.use(cookieParser())
 	.use(session(sess))
 	.use(passport.initialize())
-	.use(passport.session())
-	.use(cors(corsOptions));
+	.use(passport.session());
+//.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, "..", "..", "frontend", "terminal", "build")));
 
