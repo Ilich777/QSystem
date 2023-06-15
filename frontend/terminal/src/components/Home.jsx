@@ -3,11 +3,18 @@ import FacultyButton from './FacultyButton';
 import Container from '@mui/material/Container/Container';
 import {
 	Typography,
-	FormControl
+	FormControl,
+	Dialog,
+	DialogTitle,
+	DialogActions,
+	Button
 } from '@mui/material';
+import AlertDialog from './AlertDialog';
 
 const Home = () => {
 	const [services, setServices] = useState([]);
+	const [wasSubmitted, setWasSubmitted] = useState(false);
+	const [code, setCode] = useState("");
 
 	async function postData(url, obj) {
 		try {
@@ -44,7 +51,16 @@ const Home = () => {
 		};
 		postData("/requests/create", body)
 			.then(response => response.json())
-			.then(json => console.log(json));
+			.then(json => setCode(json.unique_code))
+			.then(()=>setWasSubmitted(true))
+  };
+
+	/*const handleOpenDialog = () => {
+    setisOpen(true);
+  };*/
+
+  function handleCloseDialog() {
+    setWasSubmitted(false);
   };
 
   return (
@@ -67,6 +83,18 @@ const Home = () => {
 					</div>
 				</FormControl>
       </form>
+			<Dialog
+				open={wasSubmitted}
+				onClose={handleCloseDialog}
+				aria-labelledby="alert-dialog-title"
+			>
+				<DialogTitle id="alert-dialog-title" sx={{ whiteSpace: 'pre-wrap' }}>
+					{`Номер вашей заявки:\n                 ${code}`}
+				</DialogTitle>
+				<DialogActions>
+					<Button onClick={handleCloseDialog} autoFocus>Ok</Button>
+				</DialogActions>
+			</Dialog>
 		</Container>
   );
 };
