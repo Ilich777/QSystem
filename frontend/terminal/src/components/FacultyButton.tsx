@@ -1,13 +1,13 @@
 import React from "react";
 import Button from "@mui/material/Button/Button";
 
-interface MyComponentProps {
+interface FacultyButton {
   id: string,
 	faculty: string,
-	onClick: (e: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void
+	onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const FacultyButton: React.FC<MyComponentProps> = ({id, faculty, onClick }) => {
+const facultyButton: React.FC<FacultyButton> = ({id, faculty, onClick }) => {
   
 	return (
 		<Button
@@ -25,4 +25,4 @@ const FacultyButton: React.FC<MyComponentProps> = ({id, faculty, onClick }) => {
 	);
 };
 
-export default FacultyButton;
+export default facultyButton;

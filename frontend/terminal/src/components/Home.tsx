@@ -1,14 +1,11 @@
 import React, {useState, useEffect, MouseEvent} from "react";
-import FacultyButton from "./FacultyButton";
 import Container from "@mui/material/Container/Container";
 import {
 	Typography,
-	FormControl,
-	Dialog,
-	DialogTitle,
-	DialogActions,
-	Button
+	FormControl
 } from "@mui/material";
+import AlertDialog from "./AlertDialog";
+import ServicesList from "./ServicesList";
 
 interface Services {
 	service_id: string,
@@ -107,37 +104,19 @@ const Home = () => {
 			</Typography>
 			<form>
 				<FormControl fullWidth margin="normal">
-					<div className="services-list">
-						{/* Map over 'services' and render each service */}
-						{services.map(service => {
-							const {service_id, service_name} = service;
-							return (
-								<FacultyButton
-									id={service_id}
-									key={service_id}
-									faculty={service_name}
-									onClick={(e:MouseEvent<HTMLButtonElement>)=>{
-										const service_id = e.target as HTMLButtonElement;
-										setservice_idState(service_id.id);
-									}}
-								></FacultyButton>
-							);
-						})}
-					</div>
+					<ServicesList
+						services={services}
+						afterLoading={(e:MouseEvent<HTMLButtonElement>)=>{
+							const service_id = e.target as HTMLButtonElement;
+							setservice_idState(service_id.id);
+						}}
+					/>
 				</FormControl>
 			</form>
-			<Dialog
-				open={wasSubmitted}
-				onClose={handleCloseDialog}
-				aria-labelledby="alert-dialog-title"
-			>
-				<DialogTitle id="alert-dialog-title" sx={{ whiteSpace: "pre-wrap" }}>
-					{`Номер вашей заявки:\n                 ${code}`}
-				</DialogTitle>
-				<DialogActions>
-					<Button onClick={handleCloseDialog} autoFocus>Ok</Button>
-				</DialogActions>
-			</Dialog>
+			<AlertDialog
+				isOpen={wasSubmitted}
+				closeHandler={handleCloseDialog}
+			>{`Номер вашей заявки:\n                 ${code}`}</AlertDialog>
 		</Container>
 	);
 };
