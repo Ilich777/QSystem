@@ -4,17 +4,17 @@ import {
 	DialogTitle,
 	DialogActions,
 	Button
-} from "@mui/material"
+} from "@mui/material";
 
-const AlertDialog = (isOpen, handleCloseDialog) => {
+const AlertDialog = (/*isOpen, handleCloseDialog*/) => {
 	return(
 		<div>
-			{ isOpen && (
+			{/* isOpen && (
 				<div>
 					
 				</div>
-		)}
-	</div>
+			)*/}
+		</div>
 	);
 };
 export default AlertDialog;

@@ -3,12 +3,12 @@ import {
 	Toolbar, 
 	Typography,
 	Box
-} from '@mui/material';
-import React from 'react';
-import "./../App.css"
+} from "@mui/material";
+import React from "react";
+import "./../App.css";
 
 const Header = () => {
-  return (
+	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static">
 				<Toolbar className="App-header">
@@ -16,7 +16,7 @@ const Header = () => {
 				</Toolbar>
 			</AppBar>
 		</Box>
-  );
+	);
 };
 
 export default Header;

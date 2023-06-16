@@ -165,11 +165,9 @@ server.listen(PORT, async () => {
 		console.log(`Server started at http://localhost:${PORT}`);
 		console.log(" ");
 		console.log("Build TypeScript in watch mode:");
-		console.log("cd backend");
-		console.log("tsc -w");
+		console.log("npm run devBuild --prefix backend");
 		console.log(" ");
 		console.log("Build React:");
-		console.log("cd ..");
 		console.log("npm run build --prefix frontend/terminal");
 		console.log(" ");
 		console.log("Start server:");

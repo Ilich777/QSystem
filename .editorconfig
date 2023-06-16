@@ -13,13 +13,13 @@ charset = utf-8
 
 # Matches multiple files with brace expansion notation
 # Set default charset
-[*.{js,py,ts}]
+[*.{js,py}]
 charset = utf-8
 indent_style = tab
 indent_size = 4
 
 # 2 space indentation
-[*.jsx]
+[*.{jsx,ts,tsx}]
 indent_style = tab
 indent_size = 2
 

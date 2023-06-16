@@ -19,3 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Write middleware for checking access to the endpoint
 - Implemented the logic for changing statuses of request
 - Add LICENSE, CHANGELOG
+
+## [0.1.1] - 2023-06-16
+
+### Added
+
+- Configured authocompilation React in one container with Node js
+- Implemented terminal frontend with viewing services and sending requests

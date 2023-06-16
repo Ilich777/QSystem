@@ -45,7 +45,8 @@ requestsRouter.post("/create",async (req: any, res: any) => {
 			code: request.unique_code,
 			service: serviceAndTypeRequest.service.service_name
 		});
-		res.status(201).json(code);
+		const {unique_code} = code;
+		res.status(201).json(unique_code);
 	} catch(e: any) {
 		res.status(400).json(e.message);
 	}

@@ -25,8 +25,10 @@ servicesRouter.get("/",async (_: any, res: any) => {
 	try {
 		const allServices = await servicesRepository.getServices();
 		if (allServices.length !== 0) {
-			if (allServices[2].service_id === 3)
-				allServices.pop();
+			for(const [key, item] of Object.entries(allServices))
+				if (item.service_name === "undefined") {
+					allServices.splice(+key, 1);
+				}
 			res.json(allServices);
 		}
 		else 

@@ -7,7 +7,8 @@
     "start": "node ./dist/server.js",
     "build": "tsc",
     "dev": "nodemon --ignore sessions/ ./dist/server.js",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "devBuild": "tsc -w"
   },
   "author": "",
   "license": "ISC",

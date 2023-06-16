@@ -1,6 +1,6 @@
-module.exports = {
+{
 	"parser": "@typescript-eslint/parser",
-  	"plugins": [
+	"plugins": [
 		"@typescript-eslint"
 	],
 	"extends": [
@@ -46,4 +46,4 @@ module.exports = {
 		"@typescript-eslint/no-var-requires": "off",
 		"prefer-const": ["warn"]
 	}
-};
+}
