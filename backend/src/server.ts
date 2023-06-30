@@ -97,6 +97,7 @@ import { requestsRouter } from "./web/requestsRouter";
 import { servicesRouter } from "./web/servicesRouter";
 import { authRouter } from "./web/authRouter";
 import { userRouter } from "./web/userRouter";
+import { vestnikViewsRouter } from "./web/vestnikViewsRouter";
 
 if (!Object.hasOwn(env, "NODE_ENV") || env["NODE_ENV"] == "development") {
 	console.log("Development mode");
@@ -140,6 +141,7 @@ app.get("/", function (_, res) {
 import { dbCreateConnection } from "./data/dbCreateConnection";
 import "./data/passport";
 
+
 export const ds = dbCreateConnection(postgres)
 	.then(() => {
 		s1.on("connection", (socket) => {
@@ -158,6 +160,7 @@ export const ds = dbCreateConnection(postgres)
 		app.use("/requests", requestsRouter);
 		app.use("/services", servicesRouter);
 		app.use("/users", userRouter);
+		app.use("/views", vestnikViewsRouter);
 	});
 
 server.listen(PORT, async () => {
